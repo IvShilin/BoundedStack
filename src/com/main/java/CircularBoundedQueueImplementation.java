@@ -47,12 +47,11 @@ public class CircularBoundedQueueImplementation<T> implements CircularBoundedQue
     public T poll() throws IllegalStateException {
         if (isEmpty()) {
             return null;
+        } else {
+            front = (front + 1) % capacity;
+            size = size - 1;
+            return (T) queue[front];
         }
-
-        Object element = queue[front];
-        front = (front + 1) % capacity;
-        size = size - 1;
-        return (T) element;
 
     }
 
@@ -66,7 +65,7 @@ public class CircularBoundedQueueImplementation<T> implements CircularBoundedQue
     public T peek() throws IllegalStateException {
         if (isEmpty())
             return null;
-        return (T) queue[front];
+        else return (T) queue[front];
     }
 
     /**

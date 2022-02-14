@@ -21,42 +21,47 @@ public class QueuedBoundedStackImplementation<T> implements IBoundedStack<T> {
 
     @Override
     public void push(T value) {
-        if (isFull()) {
-            stack[top] = value;
-            top = (top + 1) % capacity;
+        if (q1.isEmpty()) {
+            q1.offer(value);
         } else {
-            size += 1;
+            for (int i = 0; i < q1.size(); i++) {
+                q2.offer(q1.poll());
+            }
+            q1.offer(value);
+            for (int j = 0; j < q1.size(); j++) {
+                q1.offer(q2.poll());
+            }
         }
-        stack[top] = value;
+        size = size+1;
     }
 
     @Override
     public T pop() {
-        if (q1.isEmpty())
-            return null;
-        else {
-            while (q1.size() != 1) {
-                q2.offer(q1.peek());
-                q1.poll();
-            }
-            q1.poll();
-            size = size - 1;
-
-            CircularBoundedQueueI<Object> q = q1;
-            q1 = q2;
-            q2 = q;
-            return (T) q1.peek();
-        }
-
+        Object element = q1.peek();
+        size = size - 1;
+        return (T) element;
     }
+
 
     @Override
     public T top() throws IllegalStateException {
         if (q1.isEmpty()) {
             return null;
-        } else {
-            return (T) q1.peek();
         }
+
+        while (q1.size() != 1) {
+            q2.offer(q1.peek());
+            q1.poll();
+        }
+
+        Object temp = q1.peek();
+        q1.poll();
+        q2.offer(temp);
+
+        CircularBoundedQueueI<Object> q = q1;
+        q1 = q2;
+        q2 = q;
+        return (T) temp;
     }
 
     @Override

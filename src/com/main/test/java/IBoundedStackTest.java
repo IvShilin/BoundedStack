@@ -53,8 +53,11 @@ class IBoundedStackTest {
         IBoundedStack<Integer> stack = new QueuedBoundedStackImplementation<>(4);
 
         stack.push(1);
+        assertEquals(1, stack.top());
         stack.push(2);
+        assertEquals(2, stack.top());
         stack.push(3);
+        assertEquals(3, stack.top());
         stack.push(4);
 
         assertFalse(stack.isEmpty());
