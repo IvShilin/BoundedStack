@@ -21,7 +21,7 @@ public class QueuedBoundedStackImplementation<T> implements IBoundedStack<T> {
 
     @Override
     public void push(T value) {
-        if (stack.isFull()) {
+        if (isFull()) {
             stack[top] = value;
             top = (top + 1) % capacity;
         } else {
