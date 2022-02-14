@@ -3,7 +3,6 @@ package com.main.java;
 public class QueuedBoundedStackImplementation<T> implements IBoundedStack<T> {
     private int top;
     private int size;
-    private final Object[] stack;
     private final int capacity;
 
     CircularBoundedQueueI<Object> q1;
@@ -14,15 +13,15 @@ public class QueuedBoundedStackImplementation<T> implements IBoundedStack<T> {
 
         q1 = new CircularBoundedQueueImplementation<>(capacity);
         q2 = new CircularBoundedQueueImplementation<>(capacity);
-        stack = new Object[capacity];
-
         size = 0;
     }
 
+    //тут ошибка в пуше, меняю тут код и валится топ()
     @Override
     public void push(T value) {
-        if (q1.isEmpty()) {
+        if (size < capacity) {
             q1.offer(value);
+            size = size + 1;
         } else {
             for (int i = 0; i < q1.size(); i++) {
                 q2.offer(q1.poll());
@@ -31,15 +30,21 @@ public class QueuedBoundedStackImplementation<T> implements IBoundedStack<T> {
             for (int j = 0; j < q1.size(); j++) {
                 q1.offer(q2.poll());
             }
+            size = size + 1;
         }
-        size = size+1;
+
     }
 
     @Override
     public T pop() {
+        if (q1.isEmpty()){
+            return null;
+        }
         Object element = q1.peek();
+        q1.poll();
         size = size - 1;
         return (T) element;
+
     }
 
 
@@ -48,20 +53,14 @@ public class QueuedBoundedStackImplementation<T> implements IBoundedStack<T> {
         if (q1.isEmpty()) {
             return null;
         }
+        Object element = q1.peek();
+//
+//        CircularBoundedQueueI<Object> q = q1;
+//        q1 = q2;
+//        q2 = q;
+        return (T) element;
 
-        while (q1.size() != 1) {
-            q2.offer(q1.peek());
-            q1.poll();
-        }
 
-        Object temp = q1.peek();
-        q1.poll();
-        q2.offer(temp);
-
-        CircularBoundedQueueI<Object> q = q1;
-        q1 = q2;
-        q2 = q;
-        return (T) temp;
     }
 
     @Override

@@ -40,8 +40,8 @@ class IBoundedStackTest {
         assertFalse(stack.isEmpty());
 
         assertEquals(1, stack.size());
-
         assertEquals(0, stack.top());
+
         assertEquals(0, stack.pop());
 
         assertTrue(stack.isEmpty());
@@ -59,6 +59,7 @@ class IBoundedStackTest {
         stack.push(3);
         assertEquals(3, stack.top());
         stack.push(4);
+        assertEquals(4, stack.size());
 
         assertFalse(stack.isEmpty());
         assertTrue(stack.isFull());
@@ -89,6 +90,7 @@ class IBoundedStackTest {
         stack.push(3);
         stack.push(4);
         stack.push(5);
+        assertEquals(5, stack.top());
         stack.push(6);
 
         assertEquals(4, stack.size());
