@@ -70,7 +70,10 @@ class IBoundedStackTest {
 
         assertEquals(3, stack.size());
         assertFalse(stack.isFull());
+        assertFalse(stack.isEmpty());
 
+
+        assertEquals(3, stack.top());
         assertEquals(3, stack.pop());
         assertEquals(2, stack.pop());
         assertEquals(1, stack.pop());

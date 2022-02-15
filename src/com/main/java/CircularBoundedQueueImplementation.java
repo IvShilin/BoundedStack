@@ -12,7 +12,7 @@ public class CircularBoundedQueueImplementation<T> implements CircularBoundedQue
      *
      * @param capacity is maximum capacity of the queue
      */
-    CircularBoundedQueueImplementation(int capacity) {
+    public CircularBoundedQueueImplementation(int capacity) {
         front = 0;
         rear = 0;
         size = 0;
@@ -35,7 +35,6 @@ public class CircularBoundedQueueImplementation<T> implements CircularBoundedQue
         }
         queue[rear] = value;
         rear = (rear + 1) % capacity;
-
     }
 
     /**
@@ -48,9 +47,11 @@ public class CircularBoundedQueueImplementation<T> implements CircularBoundedQue
         if (isEmpty()) {
             return null;
         } else {
+            var res = (T) queue[front];
             front = (front + 1) % capacity;
             size = size - 1;
-            return (T) queue[front];
+            //return (T) queue[front];
+            return res;
         }
 
     }

@@ -2,7 +2,6 @@ package com.main.java;
 
 public class QueuedBoundedStackImplementation<T> implements IBoundedStack<T> {
     private int top;
-    private int size;
     private final int capacity;
 
     CircularBoundedQueueI<Object> q1;
@@ -10,39 +9,32 @@ public class QueuedBoundedStackImplementation<T> implements IBoundedStack<T> {
 
     public QueuedBoundedStackImplementation(int capacity) {
         this.capacity = capacity;
-
         q1 = new CircularBoundedQueueImplementation<>(capacity);
         q2 = new CircularBoundedQueueImplementation<>(capacity);
-        size = 0;
     }
 
-    //тут ошибка в пуше, меняю тут код и валится топ()
     @Override
     public void push(T value) {
-        if (size < capacity) {
+        if (q1.isEmpty()) {
             q1.offer(value);
-            size = size + 1;
         } else {
-            for (int i = 0; i < q1.size(); i++) {
+            while (!q1.isEmpty()) {
                 q2.offer(q1.poll());
             }
             q1.offer(value);
-            for (int j = 0; j < q1.size(); j++) {
+            while (!q2.isEmpty() && !q1.isFull()) {
                 q1.offer(q2.poll());
             }
-            size = size + 1;
         }
-
     }
 
     @Override
     public T pop() {
-        if (q1.isEmpty()){
+        if (q1.isEmpty()) {
             return null;
         }
         Object element = q1.peek();
         q1.poll();
-        size = size - 1;
         return (T) element;
 
     }
@@ -54,10 +46,6 @@ public class QueuedBoundedStackImplementation<T> implements IBoundedStack<T> {
             return null;
         }
         Object element = q1.peek();
-//
-//        CircularBoundedQueueI<Object> q = q1;
-//        q1 = q2;
-//        q2 = q;
         return (T) element;
 
 
@@ -65,22 +53,22 @@ public class QueuedBoundedStackImplementation<T> implements IBoundedStack<T> {
 
     @Override
     public void flush() {
-        size = 0;
+        q1.flush();
     }
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return q1.size() == 0;
     }
 
     @Override
     public boolean isFull() {
-        return size == capacity;
+        return q1.size() == capacity;
     }
 
     @Override
     public int size() {
-        return size;
+        return q1.size();
     }
 
     @Override
