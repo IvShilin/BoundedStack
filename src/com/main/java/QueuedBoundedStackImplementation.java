@@ -1,7 +1,6 @@
 package com.main.java;
 
 public class QueuedBoundedStackImplementation<T> implements IBoundedStack<T> {
-    private int top;
     private final int capacity;
 
     CircularBoundedQueueI<Object> q1;
