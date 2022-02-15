@@ -28,6 +28,7 @@ public class QueuedBoundedStackImplementation<T> implements IBoundedStack<T> {
         }
     }
 
+
     @Override
     public T pop() {
         if (q1.isEmpty()) {
