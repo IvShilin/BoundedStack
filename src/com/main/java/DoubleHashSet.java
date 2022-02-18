@@ -1,54 +1,13 @@
-package com.company;
+package com.main.java;
 
-import java.util.Scanner;
-
-public class CommandShellWithoutRollbacks {
-    static ISet<Object> setFiles;
-    static ISet<Object> setDirectories;
-
-    public static void main(String arg[]) {
-        String input;
-        Scanner sc = new Scanner(System.in);
-        input = sc.nextLine();
-        int n = Integer.parseInt(input);
-        setFiles = new DoubleHashSet<Object>(n);
-        setDirectories = new DoubleHashSet<Object>(n);
-
-
-        for (int i = 0; i < n; i++) {
-            String inputString = sc.nextLine();
-
-            if (inputString.contains("NEW")) {
-                String strWithoutNew = inputString.substring(4);
-                if (strWithoutNew.contains("/")) {
-                    setDirectories.add(strWithoutNew);
-                } else if (strWithoutNew.contains(".")) {
-                    setFiles.add(strWithoutNew);
-                } else {
-                    System.out.println("ERROR: cannot execute " + inputString);
-                }
-
-            }
-
-            else if (inputString.contains("REMOVE")) {
-                String strWithoutRemove = inputString.substring(7);
-                if (strWithoutRemove.contains("/")) {
-                    setDirectories.remove(strWithoutRemove);
-                } else if (strWithoutRemove.contains(".")) {
-                    setFiles.remove(strWithoutRemove);
-                } else {
-                    System.out.println("ERROR: cannot execute " + inputString);
-                }
-            }
-
-            else if (inputString.contains("LIST")) {
-                setFiles.printing();
-                setDirectories.printing();
-            }
-        }
-
-    }
-}
+/**
+ * An implementation of Set with double hashing based on the DoubleHashSet class that
+ * implements ISet interfaces using double hashing for collision handling
+ * <li>array size should be taken a prime number to produce good results.</li>
+ *
+ * @param <T> any object
+ * @author Elina Akimchenkova (BS21-07 e.akimchenkova@innopolis.university)
+ */
 
 interface ISet<T> {
     void add(T item) throws IllegalStateException; //// add item in the set
@@ -70,11 +29,10 @@ interface ISet<T> {
     int getNextPrime(int minN);
 
     boolean isPrime(int num);
-
-    void printing();
 }
 
-class DoubleHashSet<T> implements ISet<T> {
+
+public class DoubleHashSet<T> implements ISet<T> {
     private int arraySize;
     private int size = 0;
     Object[] hashTable;
@@ -287,13 +245,6 @@ class DoubleHashSet<T> implements ISet<T> {
     public boolean isEmpty() {
         return size == 0;
     }
-
-    public void printing() {
-        for (int i = 0; i < arraySize; i++) {
-            if (hashTable[i] != null) {
-                System.out.print(hashTable[i] + " ");
-            }
-        }
-    }
 }
+
 
