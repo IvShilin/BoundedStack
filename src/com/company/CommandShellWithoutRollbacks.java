@@ -14,34 +14,28 @@ public class CommandShellWithoutRollbacks {
         setFiles = new DoubleHashSet<Object>(n);
         setDirectories = new DoubleHashSet<Object>(n);
 
-
         for (int i = 0; i < n; i++) {
             String inputString = sc.nextLine();
+            if (!inputString.equals("LIST")) {
+                String command = inputString.split(" ")[0];
+                String fd = inputString.split(" ")[1];
 
-            if (inputString.contains("NEW")) {
-                String strWithoutNew = inputString.substring(4);
-                if (strWithoutNew.contains("/")) {
-                    setDirectories.add(strWithoutNew);
-                } else if (strWithoutNew.contains(".")) {
-                    setFiles.add(strWithoutNew);
-                } else {
-                    System.out.println("ERROR: cannot execute " + inputString);
+                if (command.equals("NEW")) {
+                    if (fd.contains("/")) {
+                        setDirectories.add(fd);
+                    } else {
+                        setFiles.add(fd);
+                    }
+                } else if (command.equals("REMOVE")) {
+                    if (setDirectories.contains(fd)) {
+                        setDirectories.remove(fd);
+                    } else if (setFiles.contains(fd)) {
+                        setFiles.remove(fd);
+                    } else {
+                        System.out.println("ERROR: cannot execute " + inputString);
+                    }
                 }
-
-            }
-
-            else if (inputString.contains("REMOVE")) {
-                String strWithoutRemove = inputString.substring(7);
-                if (strWithoutRemove.contains("/")) {
-                    setDirectories.remove(strWithoutRemove);
-                } else if (strWithoutRemove.contains(".")) {
-                    setFiles.remove(strWithoutRemove);
-                } else {
-                    System.out.println("ERROR: cannot execute " + inputString);
-                }
-            }
-
-            else if (inputString.contains("LIST")) {
+            } else {
                 setFiles.printing();
                 setDirectories.printing();
             }

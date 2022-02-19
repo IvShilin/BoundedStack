@@ -1,5 +1,6 @@
 package com.main.java;
 
+
 /**
  * An implementation of Set with double hashing based on the DoubleHashSet class that
  * implements ISet interfaces using double hashing for collision handling
@@ -33,6 +34,11 @@ interface ISet<T> {
 
 
 public class DoubleHashSet<T> implements ISet<T> {
+
+    private static class Defunct{
+        private static final Defunct defunct = new Defunct();
+    }
+
     private int arraySize;
     private int size = 0;
     Object[] hashTable;
@@ -159,7 +165,7 @@ public class DoubleHashSet<T> implements ISet<T> {
             if (hashTable[hasVal] != null) {
                 while (hashTable[hasVal] != null) {
                     int newIndex = getNextPrime(hasVal);  // obtaining the new index.
-                    if (hashTable[newIndex] == null) {
+                    if (hashTable[newIndex] == null || hashTable[newIndex] == Defunct.defunct) {
                         hashTable[newIndex] = item;
                         size += 1;
                         break;
@@ -169,7 +175,7 @@ public class DoubleHashSet<T> implements ISet<T> {
             }
 
             //if no collision occurs
-            else {
+            else if (hashTable[hasVal] == null || hashTable[hasVal] == Defunct.defunct){
                 hashTable[hasVal] = item;
                 size += 1;
             }
@@ -193,12 +199,12 @@ public class DoubleHashSet<T> implements ISet<T> {
         int newIndex = (hasVal + stepSize) % arraySize; //obtaining the new index in case of collision
 
         if (hashTable[hasVal] == item) {
-            hashTable[hasVal] = null;
+            hashTable[hasVal] = Defunct.defunct;
             size -= 1;
         }
 
         if (hashTable[newIndex] == item) {
-            hashTable[newIndex] = null;
+            hashTable[newIndex] = Defunct.defunct;
             size -= 1;
         }
     }
@@ -211,6 +217,7 @@ public class DoubleHashSet<T> implements ISet<T> {
      * @return true if set contains item otherwise returns false
      */
     public boolean contains(T item) {
+
         int hasVal = hashFunc1(item);
         int stepSize = hashFunc2(item);
 
