@@ -68,7 +68,12 @@ interface ISet<T> {
     void printing();
 }
 
+class Defunct{
+}
+
 class DoubleHashSet<T> implements ISet<T> {
+
+    private static final Defunct defunct = new Defunct();
     private int arraySize;
     private int size = 0;
     Object[] hashTable;
@@ -78,14 +83,12 @@ class DoubleHashSet<T> implements ISet<T> {
      *
      * @param n is maximum capacity of the set
      */
+
     public DoubleHashSet(int n) {
-        if (isPrime(n)) {
-            hashTable = new Object[n];
-            arraySize = n;
-        } else {
-            int primeCount = getNextPrime(n);
-            hashTable = new Object[primeCount];
-        }
+        arraySize = getNextPrime(n);
+        int primeCount = getNextPrime(n);
+        hashTable = new Object[primeCount];
+
     }
 
     /**
@@ -112,7 +115,7 @@ class DoubleHashSet<T> implements ISet<T> {
      * @return next prime number
      */
     public int getNextPrime(int minN) {
-        for (int i = minN; true; i++) {
+        for (int i = minN+1; true; i++) {
             if (isPrime(i)) {
                 return i;
             }
@@ -195,7 +198,7 @@ class DoubleHashSet<T> implements ISet<T> {
             if (hashTable[hasVal] != null) {
                 while (hashTable[hasVal] != null) {
                     int newIndex = getNextPrime(hasVal);  // obtaining the new index.
-                    if (hashTable[newIndex] == null) {
+                    if (hashTable[newIndex] == null || hashTable[newIndex] == defunct) {
                         hashTable[newIndex] = item;
                         size += 1;
                         break;
@@ -205,9 +208,9 @@ class DoubleHashSet<T> implements ISet<T> {
             }
 
             //if no collision occurs
-            else {
+            else if (hashTable[hasVal] == null || hashTable[hasVal] == defunct){
                 hashTable[hasVal] = item;
-                size += 1;
+                ++size;
             }
         }
     }
@@ -223,18 +226,21 @@ class DoubleHashSet<T> implements ISet<T> {
         if (isEmpty()) {
             throw new IllegalStateException();
         }
+        if (!contains(item)){
+            throw new IllegalStateException();
+        }
 
         int hasVal = hashFunc1(item); // get index from first hash
         int stepSize = hashFunc2(item); // get index from second hash
         int newIndex = (hasVal + stepSize) % arraySize; //obtaining the new index in case of collision
 
-        if (hashTable[hasVal] == item) {
-            hashTable[hasVal] = null;
+        if (item.equals(hashTable[hasVal])) {
+            hashTable[hasVal] = defunct;
             size -= 1;
         }
 
-        if (hashTable[newIndex] == item) {
-            hashTable[newIndex] = null;
+        if (item.equals(hashTable[newIndex])) {
+            hashTable[newIndex] = defunct;
             size -= 1;
         }
     }
@@ -247,15 +253,16 @@ class DoubleHashSet<T> implements ISet<T> {
      * @return true if set contains item otherwise returns false
      */
     public boolean contains(T item) {
+
         int hasVal = hashFunc1(item);
         int stepSize = hashFunc2(item);
 
         boolean flag = false;
-        if (hashTable[hasVal] == item) {
+        if (item.equals(hashTable[hasVal])) {
             flag = true;
         } else {
             int newIndex = (hasVal + stepSize) % arraySize;
-            if (hashTable[newIndex] == item) {
+            if (item.equals(hashTable[newIndex])) {
                 flag = true;
             }
         }

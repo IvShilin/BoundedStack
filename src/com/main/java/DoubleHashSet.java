@@ -193,6 +193,9 @@ public class DoubleHashSet<T> implements ISet<T> {
         if (isEmpty()) {
             throw new IllegalStateException();
         }
+        if (!contains(item)){
+            throw new IllegalStateException();
+        }
 
         int hasVal = hashFunc1(item); // get index from first hash
         int stepSize = hashFunc2(item); // get index from second hash
